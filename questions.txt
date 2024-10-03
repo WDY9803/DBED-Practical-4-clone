@@ -4,7 +4,7 @@ Which normal form is it in? Justify your answer using the same terminology that 
 
 -----------------------------------
 ... your answer here ...
-The data in "tmdb-5000.zip" - credits and movie files are not in unnoralised form ,as there is a unique id (primary key) for every entry and no duplicate tuples. It does not qualify as 1NF, as certain values are not atomic, and can further be broken down and recategorised.
+The data in "tmdb-5000.zip" - credits and movie files are not in unnormalised form, as there is a unique id (primary key) for every entry and no duplicate tuples. It does not qualify as 1NF, as certain values are not atomic, and can further be broken down and recategorised.
 -----------------------------------
 
 Q2: Consider the file "tmdb_5000_movies.csv". Suppose that it only had two columns: id and genres. Assume that there are no other columns or tables.
@@ -17,10 +17,9 @@ To achieve the Third Normal Form (3NF), we need to eliminate transitive dependen
 Given the table with two columns: id and genres, where id is the primary key, and genres is a list of genres associated with each movie, the data can be restructured into creating two separate tables:
 
 Movies Table:
-
 Columns: id (Primary Key), homepage, original_language, original_title, overview, popularity, release_date, revenue, runtime, spoken_languages, status, tagline, title, vote_average, vote_count
-Genres Table:
 
+Genres Table:
 Columns: id (Foreign Key referencing Movies table), genre
 
 This restructuring ensures that each piece of information is stored in a table related to the primary key (id). It eliminates the multi-valued dependency present in the original structure, and genres are now stored in a separate table, preventing redundancy and allowing for easier management of genres associated with each movie.
