@@ -72,6 +72,23 @@ def _parse_line(line):
 
 def _compute_stats():
     # ... you can add variables here ...
+    set_triples = set() #set for unique n_tripes
+    people_set = set() #set for distinct people in role
+    actors_set = set() #set for all distinct actors\
+    
+    actors_dict = {} #dict for actors and num of movies that they have appeared in
+    weights_dict = {} #dict for actors and their weights to cast order
+
+    #initialise
+    n_tripes = 0
+    max_m = 0
+    n_top_actors = 0
+    cast_order = 1
+    n_highweight_actor = 0
+
+    movie = "" #name for current movie
+    s_name = "" #name for highweight actor
+
     
     # open file and read it line by line
     # assume utf8 encoding, ignore non-parseable characters
@@ -88,6 +105,57 @@ def _compute_stats():
     # you can add print statements if you like, but only the
     # last four printed lines will be assessed;
     ###########################################################
+    
+    #n_triples:
+            set_triples.add((s,p,o))
+            n_triples = len(set_triples)
+    #n_triples += 1 #each line represent a n_triple
+
+    #n_people:
+            if _is_uri(o) == True and o == uri_person: #check the role
+                people_set.add(s)
+            n_people = len(people_set)
+
+    #n_top_actors:
+            if _is_uri(p) == True and p == predicate_has_actor: #check uif they are actor
+                actors_set.add(o)
+    for x in actors_set:
+        actors_dict[x] = 0 #dict for actors and movies appeared
+        weights_dict[x] = 0 #weights for actors to calculate n_highweight_actor
+    with open(data_file, encoding="utf8", errors="ignore") as f:
+        for line in f:
+            s, p, o = _parse_line(line)
+            if _is_uri(p) == True and p == predicate_has_actor:
+                actors_dict[o] += 1
+                if actors_dict[o] > max_m:
+                    max_m = actors_dict[o]
+    for x in actors_dict.values():
+        if x == max_m:
+            n_top_actors += 1
+            
+    #n_highweight_actor:
+    with open(data_file, encoding="utf8", errors="ignore") as f:
+        for line in f:
+            s, p, o = _parse_line(line)
+            if _is_uri(p) == True and p == predicate_has_actor:
+                if s != movie:
+                    movie = s
+                    cast_order = 1
+                weights_dict[o] += (1/cast_order)
+                cast_order += 1
+
+    for x in weights_dict:
+        if weights_dict[x] > n_highweight_actor:
+            n_highweight_actor = weights_dict[x]
+            highweight_id = x
+
+    #s_name:
+    with open(data_file, encoding="utf8", errors="ignore") as f:
+        for line in f:
+            s, p, o = _parse_line(line)
+            if _is_uri(p) == True and p == predicate_has_name and s == highweight_id:
+                s_name_temp = o
+                s_name = s_name_temp.replace('"','')
     
     ###########################################################
     # n_triples -- number of distinct triples
@@ -110,8 +178,12 @@ def _compute_stats():
 if __name__ == "__main__":
     n_triples, n_people, n_top_actors, n_highweight_actor, s_name = _compute_stats()
     print()
-    print(f"{n_triples:,} (n_triples)")
-    print(f"{n_people:,} (n_people)")
-    print(f"{n_top_actors} (n_top_actors)")
-    print(f"{n_highweight_actor} (n_highweight_actor)")
-    print(f"{s_name} (s_name)")
+    print(f"{n_triples:,} (n_triples)")  #36,769 (n_triples)
+    print(f"{n_people:,} (n_people)") #11,135 (n_people)
+    print(f"{n_top_actors} (n_top_actors)") #12 (n_top_actors)
+    print(f"{n_highweight_actor} (n_highweight_actor)") #3.5 (n_highweight_actor)
+    print(f"{s_name} (s_name)") #Tom Hardy (s_name)
+
+
+
+
