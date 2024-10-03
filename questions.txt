@@ -4,6 +4,7 @@ Which normal form is it in? Justify your answer using the same terminology that 
 
 -----------------------------------
 ... your answer here ...
+The data in "tmdb-5000.zip" - credits and movie files are not in unnoralised form ,as there is a unique id (primary key) for every entry and no duplicate tuples. It does not qualify as 1NF, as certain values are not atomic, and can further be broken down and recategorised.
 -----------------------------------
 
 Q2: Consider the file "tmdb_5000_movies.csv". Suppose that it only had two columns: id and genres. Assume that there are no other columns or tables.
@@ -12,6 +13,17 @@ How can you restructure this data so that it is in the 3NF? Justify your answer.
 
 -----------------------------------
 ... your answer here ...
+To achieve the Third Normal Form (3NF), we need to eliminate transitive dependencies and ensure that each non-prime attribute is fully functionally dependent on the primary key.
+Given the table with two columns: id and genres, where id is the primary key, and genres is a list of genres associated with each movie, the data can be restructured into creating two separate tables:
+
+Movies Table:
+
+Columns: id (Primary Key), homepage, original_language, original_title, overview, popularity, release_date, revenue, runtime, spoken_languages, status, tagline, title, vote_average, vote_count
+Genres Table:
+
+Columns: id (Foreign Key referencing Movies table), genre
+
+This restructuring ensures that each piece of information is stored in a table related to the primary key (id). It eliminates the multi-valued dependency present in the original structure, and genres are now stored in a separate table, preventing redundancy and allowing for easier management of genres associated with each movie.
 -----------------------------------
 
 Q3: Review the data in "movies.nt". You can use any text editor to open this file. You don't have to use Python scripts for this question, you can just use search in a text editor or Unix command line tools.
@@ -20,6 +32,18 @@ List all genre names (e.g., Action, Comedy, etc.) for the movie represented by t
 
 -----------------------------------
 ... your answer here ...
+
+_:m_228161 <http://adelaide.edu.au/dbed/hasGenre> _:g_14 .
+_:m_228161 <http://adelaide.edu.au/dbed/hasGenre> _:g_35 .
+_:m_228161 <http://adelaide.edu.au/dbed/hasGenre> _:g_16 .
+_:m_228161 <http://adelaide.edu.au/dbed/hasGenre> _:g_878 .
+_:m_228161 <http://adelaide.edu.au/dbed/hasGenre> _:g_10751 .
+
+_:g_14 . = Fantasy
+_:g_35 . = Comedy
+_:g_16 . = Animation
+_:g_878 . = Science Fiction
+_:g_10751 . = Family
 -----------------------------------
 
 Q4: Consider the following sentence: "Adelaide is the state capital of South Australia" (you knew that, right?). Encode this information in N-Triples format. Appropriately use blank nodes, URIs and string literals. Note that the sentence has some implied information that also needs to be included (e.g., what is South Australia? Do you need to provide more context for how you just described South Australia?).
@@ -28,4 +52,10 @@ You can use "movies.nt" as a reference. Paste your answer here, rather rather th
 
 -----------------------------------
 ... your answer here ...
+_:a1 <http://adelaide.edu.au/dbed/hasType> <http://adelaide.edu.au/dbed/City> .
+_:a1 <http://adelaide.edu.au/dbed/hasName> "Adelaide" .                                 //a1 = Adelaide
+_:a1 <http://adelaide.edu.au/dbed/isA> <http://adelaide.edu.au/dbed/StateCapital>
+_:s0 <http://adelaide.edu.au/dbed/hasType> <http://adelaide.edu.au/dbed/State>
+_:s0 <http://adelaide.edu.au/dbed/hasName> "South Australia" .                          //s0 = South Australia
+_:s0 <http://adelaide.edu.au/dbed/hasStateCapital> _:a1                                 // South Australia has State Capital Adelaide
 -----------------------------------
